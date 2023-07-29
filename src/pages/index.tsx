@@ -1,88 +1,21 @@
 import Head from "next/head";
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, type DocumentSnapshot } from "firebase/firestore";
-import { useState, useEffect } from "react";
-import * as XLSX from "xlsx"; // Import the xlsx library
-
-interface GameData {
-  sport_hour: number;
-  screen_hour: number;
-  game_level: string;
-  mood: number;
-  game_difficulty: string;
-  game_time: string;
-  name: string;
-  sleep_quality: number;
-}
-
-interface UserData {
-  age: string;
-  education: string;
-  email: string;
-  gameData: GameData;
-  bmi: string;
-  gender: string;
-}
+import { useState, type SyntheticEvent } from "react";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  const firebaseConfig = {
-    apiKey: "AIzaSyC9Pzo_um3NJBTR4PX81HG7R9XzGLgZfW8",
-    authDomain: "bigbran-62b09.firebaseapp.com",
-    projectId: "bigbran-62b09",
-    storageBucket: "bigbran-62b09.appspot.com",
-    messagingSenderId: "776782980237",
-    appId: "1:776782980237:web:40d9cf3009e93326bdaec4"
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  // Initialize Firebase
-  initializeApp(firebaseConfig);
-  const db = getFirestore();
-
-  const [usersDataNumberMemory, setUsersDataNumberMemory] = useState<UserData[]>([]);
-
-  const [usersDataAudioMemory, setUsersDataAudioMemory] = useState<UserData[]>([]);
-
-
-  useEffect(() => {
-
-    const loadasync = async () => {
-
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const userDataArray: UserData[] = [];
-      const userDataArrayAudio: UserData[] = [];
-
-      querySnapshot?.forEach((doc: DocumentSnapshot) => {
-        const userData = doc.data() as UserData;
-        if (userData.gameData.name === "Number Memory") {
-          userDataArray.push(userData);
-        }
-        if (userData.gameData.name === "Audio Memory") {
-          userDataArrayAudio.push(userData);
-        }
-      });
-
-      setUsersDataNumberMemory(userDataArray);
-      setUsersDataAudioMemory(userDataArrayAudio);
-
-    };
-    loadasync().then(() => { return},
-      () => {return },);
-  }, [db]);
-
-  // Function to export data as Excel
-  const exportToExcel = () => {
-    let flattenedData = usersDataNumberMemory.map((userData) => {
-      const { gameData, ...rest } = userData;
-      return { ...rest, ...gameData };
-    });
-    flattenedData = usersDataAudioMemory.map((userData) => {
-      const { gameData, ...rest } = userData;
-      return { ...rest, ...gameData };
-    });
-    const worksheet = XLSX.utils.json_to_sheet(flattenedData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "UserData");
-    XLSX.writeFile(workbook, "userdata.xlsx");
+  const handleLogin = (e: SyntheticEvent) => {
+    e.preventDefault();
+    // Replace this condition with your actual authentication logic
+    if (email === "bigbrain2023fyp@gmail.com" && password === "P@ssw0rd123!") {
+      // Redirect to the next screen or dashboard
+      router.push("/dashboard");
+    } else {
+      alert("Invalid username or password!");
+    }
   };
 
   return (
@@ -93,21 +26,45 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="flex flex-col items-end gap-12 px-4 py-4">
-          {/* Move the export button to the top right */}
+        <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
+          <div className="w-full p-6 bg-white rounded-md shadow-md lg:max-w-xl">
+            <h1 className="text-3xl font-bold text-center text-gray-700">Logo</h1>
+            <form className="mt-6" onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-semibold text-gray-800">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-800">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md focus:border-gray-400 focus:ring-gray-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
 
-          <button
-            className="flex-row text-5xl font-extrabold tracking-tight sm:text-[4rem] bg-[hsl(280,100%,70%)] hover:bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold py-2 px-4 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80  text-center inline-flex items-center rounded"
-            onClick={exportToExcel}
-          >
-            <svg className="w-12 h-12 text-white pr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
-            </svg>
-            EXPORT
-          </button>
+              <div className="mt-2">
+                <button
+                  type="submit"
+                  className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600"
+                >
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </main>
     </>
-
   );
 }
