@@ -1,8 +1,6 @@
 import Head from "next/head";
-import Link from "next/link";
-import { api } from "~/utils/api";
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, DocumentSnapshot } from "firebase/firestore";
+import { getFirestore, collection, getDocs, type DocumentSnapshot } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import * as XLSX from "xlsx"; // Import the xlsx library
 
@@ -27,7 +25,6 @@ interface UserData {
 }
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
   const firebaseConfig = {
     apiKey: "AIzaSyC9Pzo_um3NJBTR4PX81HG7R9XzGLgZfW8",
     authDomain: "bigbran-62b09.firebaseapp.com",
@@ -38,42 +35,50 @@ export default function Home() {
   };
 
   // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
+  initializeApp(firebaseConfig);
   const db = getFirestore();
 
   const [usersDataNumberMemory, setUsersDataNumberMemory] = useState<UserData[]>([]);
+
   const [usersDataAudioMemory, setUsersDataAudioMemory] = useState<UserData[]>([]);
 
-  const loadasync = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    const userDataArray: UserData[] = [];
-    const userDataArrayAudio: UserData[] = [];
-
-    querySnapshot.forEach((doc: DocumentSnapshot) => {
-      const userData = doc.data() as UserData;
-      if (userData.gameData.name === "Number Memory") {
-        userDataArray.push(userData);
-      }
-      if (userData.gameData.name === "Audio Memory") {
-        userDataArrayAudio.push(userData);
-      }
-    });
-
-    setUsersDataNumberMemory(userDataArray);
-    setUsersDataAudioMemory(userDataArrayAudio);
-  };
 
   useEffect(() => {
-    loadasync();
-  }, []);
+
+    const loadasync = async () => {
+
+      const querySnapshot = await getDocs(collection(db, "users"));
+      const userDataArray: UserData[] = [];
+      const userDataArrayAudio: UserData[] = [];
+
+      querySnapshot?.forEach((doc: DocumentSnapshot) => {
+        const userData = doc.data() as UserData;
+        if (userData.gameData.name === "Number Memory") {
+          userDataArray.push(userData);
+        }
+        if (userData.gameData.name === "Audio Memory") {
+          userDataArrayAudio.push(userData);
+        }
+      });
+
+      setUsersDataNumberMemory(userDataArray);
+      setUsersDataAudioMemory(userDataArrayAudio);
+
+    };
+    loadasync().then(() => { return},
+      () => {return },);
+  }, [db]);
 
   // Function to export data as Excel
   const exportToExcel = () => {
-    const flattenedData = usersDataNumberMemory.map((userData) => {
+    let flattenedData = usersDataNumberMemory.map((userData) => {
       const { gameData, ...rest } = userData;
       return { ...rest, ...gameData };
     });
-
+    flattenedData = usersDataAudioMemory.map((userData) => {
+      const { gameData, ...rest } = userData;
+      return { ...rest, ...gameData };
+    });
     const worksheet = XLSX.utils.json_to_sheet(flattenedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "UserData");
@@ -96,7 +101,7 @@ export default function Home() {
             onClick={exportToExcel}
           >
             <svg className="w-12 h-12 text-white pr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
             </svg>
             EXPORT
           </button>
