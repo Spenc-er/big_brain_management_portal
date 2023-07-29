@@ -8,7 +8,7 @@ import Nav from "../../components/navbar";
 interface GameData {
     sport_hour: number;
     screen_hour: number;
-    game_level: string;
+    game_level: number;
     mood: number;
     game_difficulty: string;
     game_time: string;
