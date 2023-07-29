@@ -99,7 +99,7 @@ export default function Home() {
           <button
             className="flex-row text-5xl font-extrabold tracking-tight sm:text-[4rem] bg-[hsl(280,100%,70%)] hover:bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold py-2 px-4 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80  text-center inline-flex items-center disabled:opacity-25 rounded"
             onClick={exportToExcel}
-            disabled={usersDataAudioMemory.length < 1}
+            disabled={usersDataNumberMemory.length < 1}
           >
             <svg className="w-12 h-12 text-white pr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 18">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 1v11m0 0 4-4m-4 4L4 8m11 4v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3" />
