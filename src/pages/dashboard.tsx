@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, getDocs, type DocumentSnapshot } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import * as XLSX from "xlsx"; // Import the xlsx library
+import Nav from "../components/navbar";
 
 interface GameData {
   sport_hour: number;
@@ -40,8 +41,6 @@ export default function Home() {
 
   const [usersDataNumberMemory, setUsersDataNumberMemory] = useState<UserData[]>([]);
 
-  const [usersDataAudioMemory, setUsersDataAudioMemory] = useState<UserData[]>([]);
-
 
   useEffect(() => {
 
@@ -49,20 +48,17 @@ export default function Home() {
 
       const querySnapshot = await getDocs(collection(db, "users"));
       const userDataArray: UserData[] = [];
-      const userDataArrayAudio: UserData[] = [];
 
       querySnapshot?.forEach((doc: DocumentSnapshot) => {
         const userData = doc.data() as UserData;
         if (userData.gameData.name === "Number Memory") {
           userDataArray.push(userData);
         }
-        if (userData.gameData.name === "Audio Memory") {
-          userDataArrayAudio.push(userData);
-        }
+
       });
 
       setUsersDataNumberMemory(userDataArray);
-      setUsersDataAudioMemory(userDataArrayAudio);
+  
 
     };
     loadasync().then(() => { return},
@@ -71,18 +67,14 @@ export default function Home() {
 
   // Function to export data as Excel
   const exportToExcel = () => {
-    let flattenedData = usersDataAudioMemory.map((userData) => {
-      const { gameData, ...rest } = userData;
-      return { ...rest, ...gameData };
-    });
-    flattenedData = usersDataNumberMemory.map((userData) => {
+    const flattenedData = usersDataNumberMemory.map((userData) => {
       const { gameData, ...rest } = userData;
       return { ...rest, ...gameData };
     });
     const worksheet = XLSX.utils.json_to_sheet(flattenedData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "UserData");
-    XLSX.writeFile(workbook, "userdata.xlsx");
+    XLSX.writeFile(workbook, "number_memory_data.xlsx");
   };
 
   return (
@@ -93,11 +85,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+      <Nav/>
         <div className="flex flex-col items-end gap-12 px-4 py-4">
           {/* Move the export button to the top right */}
 
           <button
-            className="flex-row text-5xl font-extrabold tracking-tight sm:text-[4rem] bg-[hsl(280,100%,70%)] hover:bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold py-2 px-4 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80  text-center inline-flex items-center disabled:opacity-25 rounded"
+            className="flex-row text-5xl font-extrabold tracking-tight sm:text-[3rem] bg-[hsl(280,100%,70%)] hover:bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold py-2 px-4 shadow-lg shadow-pink-500/50 dark:shadow-lg dark:shadow-pink-800/80  text-center inline-flex items-center disabled:opacity-25 rounded"
             onClick={exportToExcel}
             disabled={usersDataNumberMemory.length < 1}
           >

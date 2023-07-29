@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useState, type SyntheticEvent } from "react";
 import { useRouter } from "next/router";
+import Image from 'next/image';
+import logo from '../images/logo.png'
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -28,7 +30,14 @@ export default function Home() {
       <main className="flex min-h-screen flex-col bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden">
           <div className="w-full p-6 bg-white rounded-md shadow-md lg:max-w-xl">
-            <h1 className="text-3xl font-bold text-center text-gray-700">Logo</h1>
+            <div className="flex justify-center">
+              <Image
+                src={logo}
+                width={200}
+                height={200}
+                alt="logo"
+              />
+            </div>
             <form className="mt-6" onSubmit={handleLogin}>
               <div className="mb-4">
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-800">
