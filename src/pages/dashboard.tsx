@@ -423,10 +423,10 @@ export default function Home() {
             EXPORT
           </button>
         </div>
-        <canvas id="myChart" ref={canvasEl} height="100" className="pb-20" />
-        <canvas id="myChart" ref={canvasEl2} height="100" className="pb-20" />
-        <canvas id="myChart" ref={canvasEl3} height="100" className="pb-20" />
-        <canvas id="myChart" ref={canvasEl4} height="100" className="pb-20" />
+        <canvas id="myChart" ref={canvasEl} height="100" className={moodData.length > 1 ? "pb-20" : "invisible"} />
+        <canvas id="myChart" ref={canvasEl2} height="100" className={sleepData.length > 1 ? "pb-20" : "invisible"} />
+        <canvas id="myChart" ref={canvasEl3} height="100" className={sportData.length > 1 ? "pb-20" : "invisible"} />
+        <canvas id="myChart" ref={canvasEl4} height="100" className={screenData.length > 1 ? "pb-20" : "invisible"} />
       </main>
 
     </>
