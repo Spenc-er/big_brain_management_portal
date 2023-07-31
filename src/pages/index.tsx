@@ -1,18 +1,25 @@
 import Head from "next/head";
-import { useState, type SyntheticEvent } from "react";
+import { useState, type SyntheticEvent, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from 'next/image';
 import logo from '../images/logo.png'
+import Cookies from 'js-cookie';
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
+  useEffect(() => {
+    const isLoggedIn = Cookies.get("isLoggedIn");
+    if (isLoggedIn === "true") {
+      router.push("/dashboard");
+    }
+  }, []);
   const handleLogin = (e: SyntheticEvent) => {
     e.preventDefault();
     // Replace this condition with your actual authentication logic
     if (email === "bigbrain2023fyp@gmail.com" && password === "P@ssw0rd123!") {
+      Cookies.set("isLoggedIn", "true", { expires: 7 }); // Expires in 7 days
       // Redirect to the next screen or dashboard
       router.push("/dashboard");
     } else {

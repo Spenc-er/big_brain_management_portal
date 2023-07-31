@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 import { Disclosure } from '@headlessui/react';
 import Image from 'next/image';
 import logo from '../images/logo.png';
+import Cookies from 'js-cookie';
+import router from "next/router";
 
 const navigation = [
     { name: 'Number Memory', href: '/dashboard' },
@@ -16,12 +18,15 @@ function classNames(...classes: string[]) {
 
 export default function Navbar() {
     const pathname = usePathname();
-
+    const handleLogout = () => {
+        Cookies.remove("isLoggedIn");
+        router.push("/");
+    };
     return (
         <Disclosure as="nav" className="bg-white shadow-lg">
-            {({  }) => (
+            {({ }) => (
                 <>
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 py-1">
                         <div className="flex h-20 justify-between">
                             <div className="flex">
                                 <div className="flex flex-shrink-0 items-center">
@@ -51,7 +56,14 @@ export default function Navbar() {
                                     ))}
                                 </div>
                             </div>
+                            <button
+                            onClick={handleLogout}
+                            className="absolute right-0 px-4 py-2 my-6 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                        >
+                            LOGOUT
+                        </button>
                         </div>
+                        
                     </div>
                 </>
             )}

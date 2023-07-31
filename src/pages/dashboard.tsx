@@ -6,7 +6,8 @@ import * as XLSX from "xlsx"; // Import the xlsx library
 import Nav from "../components/navbar";
 import Chart from "chart.js/auto";
 import { ChartType } from 'chart.js';
-
+import Cookies from 'js-cookie';
+import router from "next/router";
 
 interface GameData {
   sport_hour: number;
@@ -34,6 +35,12 @@ interface ChartData {
 }
 
 export default function Home() {
+  useEffect(() => {
+    const isLoggedIn = Cookies.get("isLoggedIn");
+    if (!(isLoggedIn === "true")) {
+      router.push("/");
+    }
+  }, []);
   const firebaseConfig = {
     apiKey: "AIzaSyC9Pzo_um3NJBTR4PX81HG7R9XzGLgZfW8",
     authDomain: "bigbran-62b09.firebaseapp.com",
