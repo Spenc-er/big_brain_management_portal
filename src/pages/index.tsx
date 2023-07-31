@@ -23,7 +23,7 @@ export default function Home() {
       // Redirect to the next screen or dashboard
       router.push("/dashboard");
     } else {
-      alert("Invalid username or password!");
+      alert("Invalid email or password!");
     }
   };
 
