@@ -9,7 +9,8 @@ import router from "next/router";
 
 const navigation = [
     { name: 'Number Memory', href: '/dashboard' },
-    { name: 'Audio Memory', href: '/game/audioMemory' }
+    { name: 'Audio Memory', href: '/game/audioMemory' },
+    { name: 'Sequence Memory', href: '/game/sequenceMemory' }
 ];
 
 function classNames(...classes: string[]) {
