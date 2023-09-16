@@ -130,7 +130,7 @@ export default function Home() {
         const worksheet = XLSX.utils.json_to_sheet(flattenedData);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "UserData");
-        XLSX.writeFile(workbook, "number_memory_data.xlsx");
+        XLSX.writeFile(workbook, "audio_memory_data.xlsx");
     };
     const canvasEl = useRef() as MutableRefObject<HTMLCanvasElement>;
     const canvasEl2 = useRef() as MutableRefObject<HTMLCanvasElement>;
